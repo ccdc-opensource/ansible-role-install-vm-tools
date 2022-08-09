@@ -5,7 +5,7 @@ galaxy_info:
   author: florianpiesche
   description: A role to install VMware or VirtualBox VM tools on the target machine if required.
   company: The Cambridge Crystallographic Data Centre
-  license: "All Rights Reserved"
+  license: "license (BSD, MIT)"
   min_ansible_version: 2.9
 
   platforms:
