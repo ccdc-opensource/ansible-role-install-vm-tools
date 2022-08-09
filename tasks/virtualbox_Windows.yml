@@ -1,0 +1,5 @@
+---
+- name: Install VirtualBox Guest Additions
+  win_chocolatey:
+    name: virtualbox-guest-additions-guest.install
+    state: present
