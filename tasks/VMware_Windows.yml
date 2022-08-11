@@ -1,0 +1,9 @@
+---
+- name: Install VMWare Tools
+  win_chocolatey:
+    name: vmware-tools
+    state: present
+  ignore_unreachable: true
+
+- name: Wait for system to become reachable
+  ansible.builtin.wait_for_connection:

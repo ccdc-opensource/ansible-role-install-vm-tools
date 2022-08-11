@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  role_name: install_vm_tools
+  namespace: ccdc
+  author: florianpiesche
+  description: A role to install VMware or VirtualBox VM tools on the target machine if required.
+  company: The Cambridge Crystallographic Data Centre
+  license: "license (BSD, MIT)"
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Windows
+      versions:
+        - all
+  galaxy_tags:
+    - ccdc
+
+dependencies: []
