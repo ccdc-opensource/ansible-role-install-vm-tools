@@ -1,0 +1,33 @@
+---
+- name: Add Hyper-V modules to default load list
+  ansible.builtin.lineinfile:
+    path: /etc/initramfs-tools
+    line: "{{ line }}"
+    state: present
+  loop_control:
+    loop_var: line
+  loop:
+    - hv_utils
+    - hv_vmbus
+    - hv_storvsc
+    - hv_blkvsc
+    - hv_netvsc
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+
+- name: Install apt packages
+  ansible.builtin.apt:
+    name:
+      - linux-virtual
+      - linux-cloud-tools-virtual
+      - linux-tools-virtual
+    state: present
+  become: true
+
+- name: Update initramfs
+  ansible.builtin.shell: |
+    update-initramfs -u
+  become: true

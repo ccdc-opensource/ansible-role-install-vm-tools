@@ -19,3 +19,6 @@
         - "{{ ansible_virtualization_type }}_{{ ansible_os_family }}.yml"
         - "{{ ansible_virtualization_type }}_{{ ansible_system }}.yml"
       skip: true
+
+- name: Reboot to ensure extensions are loaded
+  ansible.builtin.reboot:

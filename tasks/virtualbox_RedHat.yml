@@ -1,0 +1,54 @@
+---
+- name: Get kernel version
+  ansible.builtin.shell: |
+    uname -r
+  register: kernel_version
+
+- name: Enable EPEL
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+
+- name: Install required packages
+  ansible.builtin.dnf:
+    name:
+      - tar
+      - bzip2
+      - kernel-devel-{{ kernel_version.stdout }}
+      - kernel-headers
+      - perl
+      - gcc
+      - make
+      - elfutils-libelf-devel
+      - dkms
+    state: present
+
+- name: Download VirtualBox Guest Additions iso
+  ansible.builtin.get_url:
+    url: http://download.virtualbox.org/virtualbox/{{ virtualbox_latest_version }}/VBoxGuestAdditions_{{ virtualbox_latest_version }}.iso
+    dest: /tmp/vbox-guest-additions.iso
+
+- name: Mount VirtualBox Guest Additions iso
+  ansible.posix.mount:
+    src: /tmp/vbox-guest-additions.iso
+    path: /tmp/vbga
+    fstype: iso9660
+    opts: "ro,loop"
+    state: ephemeral
+  become: true
+
+- name: Install VirtualBox Guest Additions
+  ansible.builtin.shell: |
+    /tmp/vbga/VBoxLinuxAdditions.run
+  become: true
+
+- name: Unmount VirtualBox Guest Additions iso
+  ansible.posix.mount:
+    path: /tmp/vbga
+    state: unmounted
+  become: true
+
+- name: Remove VirtualBox Guest Additions iso
+  ansible.builtin.file:
+    path: /tmp/vbox-guest-additions.iso
+    state: absent
