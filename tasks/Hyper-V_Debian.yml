@@ -12,6 +12,7 @@
     - hv_storvsc
     - hv_blkvsc
     - hv_netvsc
+  become: true
 
 - name: Update apt cache
   ansible.builtin.apt:
