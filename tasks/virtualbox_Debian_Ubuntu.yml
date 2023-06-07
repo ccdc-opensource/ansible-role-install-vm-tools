@@ -1,5 +1,5 @@
 ---
-- name: Enable multiverse repo
+- name: Enable multiverse repo  # noqa: no-changed-when
   ansible.builtin.shell: |
     apt-add-repository multiverse
   become: true

@@ -1,5 +1,5 @@
 ---
-- name: Get kernel version
+- name: Get kernel version  # noqa: no-changed-when
   ansible.builtin.shell: |
     uname -r
   register: kernel_version
@@ -39,7 +39,7 @@
     state: ephemeral
   become: true
 
-- name: Install VirtualBox Guest Additions
+- name: Install VirtualBox Guest Additions  # noqa: no-changed-when
   ansible.builtin.shell: |
     /tmp/vbga/VBoxLinuxAdditions.run
   become: true

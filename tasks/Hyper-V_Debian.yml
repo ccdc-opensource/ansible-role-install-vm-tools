@@ -28,7 +28,7 @@
     state: present
   become: true
 
-- name: Update initramfs
+- name: Update initramfs  # noqa: no-changed-when
   ansible.builtin.shell: |
     update-initramfs -u
   become: true
