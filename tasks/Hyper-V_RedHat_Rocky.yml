@@ -1,0 +1,7 @@
+---
+- name: Install hyperv-daemons on Rocky
+  when: ansible_distribution == "Rocky" and ansible_distribution_major_version >= 8
+  ansible.builtin.dnf:
+    name: hyperv-daemons
+    state: present
+  become: true
