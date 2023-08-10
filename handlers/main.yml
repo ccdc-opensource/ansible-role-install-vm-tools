@@ -1,0 +1,4 @@
+---
+- name: Reboot macOS
+  ansible.builtin.reboot:
+  become: true

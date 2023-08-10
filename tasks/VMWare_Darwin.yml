@@ -1,0 +1,26 @@
+---
+- name: Copy VMware Tools iso
+  ansible.builtin.copy:
+    src: "{{ macos_vmware_tools_iso }}"
+    dest: "{{ remote_macos_vmware_tools_iso }}"
+
+- name: Mount VMware Tools iso
+  ansible.builtin.command: hdiutil mount "{{ remote_macos_vmware_tools_iso }}"
+
+- name: Install VMware Tools
+  ansible.builtin.command: installer -pkg "/Volumes/VMware Tools/Install VMware Tools.app/Contents/Resources/VMware Tools.pkg" -target /
+  # We need to ignore errors here as post-Big Sur, the extensions won't be enabled without manual intervention.
+  ignore_errors: true
+
+- name: Unount VMware Tools iso
+  ansible.builtin.command: hdiutil unmount "{{ remote_macos_vmware_tools_iso }}"
+
+- name: Remove VMware Tools iso
+  ansible.builtin.file:
+    path: "{{ remote_macos_vmware_tools_iso }}"
+    state: absent
+
+- name: Manually confirm loading of VMware Tools extensions
+  ansible.builtin.pause:
+    prompt: "Please confirm the prompt on the macOS desktop to allow the VMware extensions to load on reboot."
+  notify: Reboot macOS
