@@ -13,15 +13,15 @@
   ignore_errors: true
   become: true
 
-- name: Unount VMware Tools iso
-  ansible.builtin.command: hdiutil unmount "{{ remote_macos_vmware_tools_iso }}"
+- name: Manually confirm loading of VMware Tools extensions
+  ansible.builtin.pause:
+    prompt: "Please confirm the prompt on the macOS desktop to allow the VMware extensions to load on reboot."
+
+- name: Reboot macOS
+  ansible.builtin.reboot:
+  become: true
 
 - name: Remove VMware Tools iso
   ansible.builtin.file:
     path: "{{ remote_macos_vmware_tools_iso }}"
     state: absent
-
-- name: Manually confirm loading of VMware Tools extensions
-  ansible.builtin.pause:
-    prompt: "Please confirm the prompt on the macOS desktop to allow the VMware extensions to load on reboot."
-  notify: Reboot macOS
