@@ -11,6 +11,7 @@
   ansible.builtin.command: installer -pkg "/Volumes/VMware Tools/Install VMware Tools.app/Contents/Resources/VMware Tools.pkg" -target /
   # We need to ignore errors here as post-Big Sur, the extensions won't be enabled without manual intervention.
   ignore_errors: true
+  become: true
 
 - name: Unount VMware Tools iso
   ansible.builtin.command: hdiutil unmount "{{ remote_macos_vmware_tools_iso }}"
