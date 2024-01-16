@@ -22,5 +22,5 @@
 
 - name: Reboot to ensure extensions are loaded
   ansible.builtin.reboot:
-    reboot_timeout: 180
+    reboot_timeout: 300
   become: true
