@@ -29,6 +29,7 @@
   ansible.builtin.get_url:
     url: http://download.virtualbox.org/virtualbox/{{ virtualbox_latest_version }}/VBoxGuestAdditions_{{ virtualbox_latest_version }}.iso
     dest: /tmp/vbox-guest-additions.iso
+    mode: "0755"
 
 - name: Mount VirtualBox Guest Additions iso
   ansible.posix.mount:
