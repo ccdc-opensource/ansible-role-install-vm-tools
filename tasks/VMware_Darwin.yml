@@ -18,8 +18,9 @@
 
 - name: Mount VMware Tools iso
   when: not iso_mount_point.stat.exists
-  creates: "{{ vmware_tools_mac_mount_point }}"
-  ansible.builtin.command: hdiutil mount "{{ remote_macos_vmware_tools_iso }}"
+  ansible.builtin.command:
+    cmd: hdiutil mount "{{ remote_macos_vmware_tools_iso }}"
+    creates: "{{ vmware_tools_mac_mount_point }}"
 
 - name: Install VMware Tools  # noqa: ignore-errors
   ansible.builtin.command:
