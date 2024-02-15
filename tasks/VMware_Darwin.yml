@@ -1,25 +1,50 @@
 ---
+- name: Check for remote VMware Tools iso
+  ansible.builtin.stat:
+    path: "{{ remote_macos_vmware_tools_iso }}"
+  register: remote_iso
+
 - name: Copy VMware Tools iso
+  when: not remote_iso.stat.exists
   ansible.builtin.copy:
     src: "{{ macos_vmware_tools_iso }}"
     dest: "{{ remote_macos_vmware_tools_iso }}"
+    mode: "0755"
+
+- name: Check if iso is already mounted
+  ansible.builtin.stat:
+    path: "{{ vmware_tools_mac_mount_point }}"
+  register: iso_mount_point
 
 - name: Mount VMware Tools iso
+  when: not iso_mount_point.stat.exists
+  creates: "{{ vmware_tools_mac_mount_point }}"
   ansible.builtin.command: hdiutil mount "{{ remote_macos_vmware_tools_iso }}"
 
-- name: Install VMware Tools
-  ansible.builtin.command: installer -pkg "/Volumes/VMware Tools/Install VMware Tools.app/Contents/Resources/VMware Tools.pkg" -target /
+- name: Install VMware Tools  # noqa: ignore-errors
+  creates: "{{ ansible_env.HOME }}/Library/Application Support/VMware Tools/vmware-tools-daemon"
+  ansible.builtin.command: installer -pkg "{{ vmware_tools_mac_mount_point }}/Install VMware Tools.app/Contents/Resources/VMware Tools.pkg" -target /
   # We need to ignore errors here as post-Big Sur, the extensions won't be enabled without manual intervention.
   ignore_errors: true
   become: true
 
 - name: Manually confirm loading of VMware Tools extensions
+  when: confirm_macos_load_extensions
   ansible.builtin.pause:
     prompt: "Please confirm the prompt on the macOS desktop to allow the VMware extensions to load on reboot."
 
 - name: Reboot macOS
   ansible.builtin.reboot:
   become: true
+
+- name: Check if iso is already mounted
+  ansible.builtin.stat:
+    path: "/Volumes/VMware Tools"
+  register: iso_mount_point_postinstall
+
+- name: Unmount VMware Tools iso if necessary  # noqa: no-changed-when
+  when: iso_mount_point_postinstall.stat.exists
+  ansible.builtin.command: hdiutil unmount /Volumes/VMware Tools
 
 - name: Remove VMware Tools iso
   ansible.builtin.file:

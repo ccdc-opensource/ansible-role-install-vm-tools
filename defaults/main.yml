@@ -3,3 +3,5 @@ virtualbox_version_url: http://download.virtualbox.org/virtualbox/LATEST.TXT
 virtualbox_latest_version: "{{ lookup('ansible.builtin.url', virtualbox_version_url, split_lines=False) | trim }}"
 macos_vmware_tools_iso: "/Applications/VMware Fusion.app/Contents/Library/isoimages/x86_x64/darwin.iso"
 remote_macos_vmware_tools_iso: "/tmp/vwmare-tools.iso"
+confirm_macos_load_extensions: true
+vmware_tools_mac_mount_point: "/Volumes/VMware Tools"
