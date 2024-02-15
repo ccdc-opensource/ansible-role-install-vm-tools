@@ -22,8 +22,9 @@
   ansible.builtin.command: hdiutil mount "{{ remote_macos_vmware_tools_iso }}"
 
 - name: Install VMware Tools  # noqa: ignore-errors
-  creates: "{{ ansible_env.HOME }}/Library/Application Support/VMware Tools/vmware-tools-daemon"
-  ansible.builtin.command: installer -pkg "{{ vmware_tools_mac_mount_point }}/Install VMware Tools.app/Contents/Resources/VMware Tools.pkg" -target /
+  ansible.builtin.command:
+    cmd: installer -pkg "{{ vmware_tools_mac_mount_point }}/Install VMware Tools.app/Contents/Resources/VMware Tools.pkg" -target /
+    creates: "{{ ansible_env.HOME }}/Library/Application Support/VMware Tools/vmware-tools-daemon"
   # We need to ignore errors here as post-Big Sur, the extensions won't be enabled without manual intervention.
   ignore_errors: true
   become: true
