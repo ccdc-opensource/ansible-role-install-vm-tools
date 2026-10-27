@@ -1,0 +1,5 @@
+---
+- name: Install VirtualBox Guest Additions
+  chocolatey.chocolatey.win_chocolatey:
+    name: qemu-guest-agent
+    state: present
