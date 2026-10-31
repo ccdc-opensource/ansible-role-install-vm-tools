@@ -9,6 +9,14 @@
     name: epel-release
     state: present
   become: true
+  when: ansible_distribution != "Rocky" or ansible_distribution_major_version | int != 8
+
+- name: Enable EPEL on Rocky 8
+  ansible.builtin.include_tasks: ../rocky8_packages.yml
+  vars:
+    rocky8_packages:
+      - epel-release
+  when: ansible_distribution == "Rocky" and ansible_distribution_major_version | int == 8
 
 - name: Install required packages
   ansible.builtin.dnf:
@@ -24,6 +32,22 @@
       - dkms
     state: present
   become: true
+  when: ansible_distribution != "Rocky" or ansible_distribution_major_version | int != 8
+
+- name: Install required packages on Rocky 8
+  ansible.builtin.include_tasks: ../rocky8_packages.yml
+  vars:
+    rocky8_packages:
+      - tar
+      - bzip2
+      - kernel-devel-{{ kernel_version.stdout }}
+      - kernel-headers
+      - perl
+      - gcc
+      - make
+      - elfutils-libelf-devel
+      - dkms
+  when: ansible_distribution == "Rocky" and ansible_distribution_major_version | int == 8
 
 - name: Download VirtualBox Guest Additions iso
   ansible.builtin.get_url:

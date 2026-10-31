@@ -1,0 +1,19 @@
+---
+- name: Check installed packages on Rocky 8
+  ansible.builtin.command:
+    argv:
+      - rpm
+      - -q
+      - "{{ item }}"
+  loop: "{{ rocky8_packages }}"
+  register: rocky8_package_checks
+  changed_when: false
+  failed_when: rocky8_package_checks.rc not in [0, 1]
+  check_mode: false
+
+- name: Install missing packages on Rocky 8
+  ansible.builtin.command:
+    argv: "{{ ['dnf', '-y', 'install'] + (rocky8_package_checks.results | selectattr('rc', 'equalto', 1) | map(attribute='item') | list) }}"
+  when: rocky8_package_checks.results | selectattr('rc', 'equalto', 1) | list | length > 0
+  changed_when: true
+  become: true
