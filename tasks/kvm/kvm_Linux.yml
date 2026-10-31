@@ -1,6 +1,16 @@
 ---
+- name: Install qemu-guest-agent on Rocky 8
+  ansible.builtin.include_tasks: ../rocky8_packages.yml
+  vars:
+    rocky8_packages:
+      - qemu-guest-agent
+  when: ansible_distribution == "Rocky" and ansible_distribution_major_version | int == 8
+
 - name: Install qemu-guest-agent on RHEL
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 8
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version | int >= 8
+    - ansible_distribution != "Rocky" or ansible_distribution_major_version | int != 8
   ansible.builtin.dnf:
     name: qemu-guest-agent
     state: present
